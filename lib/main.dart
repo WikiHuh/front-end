@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wikihuh/game_state.dart';
+import 'package:wikihuh/sockets.dart';
 
 void main() => runApp(MyApp());
 

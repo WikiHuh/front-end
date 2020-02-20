@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:wikihuh/widgets/shadows.dart';
 
 class Countdown extends StatefulWidget {
   final int start;
@@ -46,16 +47,28 @@ class _CountdownState extends State<Countdown> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        SizedBox(width: 100, height: 100, child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).textTheme.display2.color),
-          strokeWidth: 8,
-          value: this.t / this.startMs,)
-        ),
-        Text((t / 1000).ceil().toString(), style: Theme.of(context).textTheme.display2,),
-      ],
+    TextStyle textStyle = Theme.of(context).textTheme.display2;
+
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          DropShadow(),
+        ]
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(width: textStyle.fontSize * 2.5, height: textStyle.fontSize * 2.5, child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(textStyle.color),
+            strokeWidth: 10,
+            value: this.t / this.startMs,)
+          ),
+          Text((t / 1000).ceil().toString(), style: textStyle,),
+        ],
+      ),
     );
   }
 }

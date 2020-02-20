@@ -1,51 +1,59 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:wikihuh/buttons/main_button.dart';
-import 'package:wikihuh/game_state.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:wikihuh/pages/waiting.dart';
+import 'package:wikihuh/sockets.dart';
+import 'package:wikihuh/widgets/buttons.dart';
+import 'package:wikihuh/widgets/leaderboard.dart';
+import 'package:wikihuh/widgets/shadows.dart';
 
-class ScoreboardPage extends StatelessWidget {
+class ScoreboardPage extends StatefulWidget {
+  final Animation<double> animation;
+
+  ScoreboardPage({this.animation});
+
+  @override
+  _ScoreboardPageState createState() => _ScoreboardPageState();
+}
+
+class _ScoreboardPageState extends State<ScoreboardPage> {
+  bool _submitted = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
-                    alignment: Alignment.center,
-                    child: Text('Leaderboard', style: Theme.of(context).textTheme.display2, textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[],
-                    ),
-                  ),
-                ],
-              ),
-              for (var p in CurrentGame.of(context).players..sort((p1, p2) => p1.score - p2.score)..sublist(0, min(2, CurrentGame.of(context).players.length)))
-                Text(p.name, style: Theme.of(context).textTheme.display2.copyWith(color: Colors.white), textAlign: TextAlign.center,),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 40),
-                child: MainButton(text: 'Continue', onPressed: () {
-                  CurrentGame.of(context).send('start game', {
-                    'gameKey': CurrentGame.of(context).gameKey,
-                    'playerKey': CurrentGame.of(context).playerKey
-                  });
-                },),
-              ),
-            ],
+    if (_submitted) {
+      return WaitingPage();
+    }
+      
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(200),
+            color: Color(0xfffcffaa),
+            boxShadow: [
+              DropShadow(),
+            ]
           ),
+          child: SvgPicture.asset('assets/trophy.svg', width: 50,),
         ),
-      ),// This trailing comma makes auto-formatting nicer for build methods.
+        Container(
+          padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
+          alignment: Alignment.center,
+          child: Text('Leaderboard', style: Theme.of(context).textTheme.display2, textAlign: TextAlign.center,),
+        ),
+        Expanded(child: Leaderboard(this.widget.animation)),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 40),
+          child: Button1(text: 'Continue', onPressed: () {
+            CurrentGame.of(context).send('ready', {});
+            setState(() {
+              _submitted = true;
+            });
+          },),
+        ),
+      ],
     );
   }
 }

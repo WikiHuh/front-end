@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+ThemeData wikiHuhTheme = ThemeData(
+    primaryColor: Color(0xff7fd97c),
+    accentColor: Color(0xffF8EFD2),
+    textTheme: Typography.whiteMountainView.copyWith(
+        button: GoogleFonts.heebo(
+            fontSize: 25,
+            color: Color(0xff334455),
+            fontWeight: FontWeight.w700),
+        body1: GoogleFonts.heebo(
+            fontSize: 15,
+            color: Color(0xff334455),
+            fontWeight: FontWeight.w700),
+        display1: GoogleFonts.merriweather(
+            fontSize: 30,
+            color: Color(0xff222233),
+            fontWeight: FontWeight.w900),
+        display2: GoogleFonts.merriweather(
+            fontSize: 36,
+            color: Color(0xff222233),
+            fontWeight: FontWeight.w800),
+        display3: GoogleFonts.merriweather(
+            fontSize: 60,
+            color: Color(0xff222233),
+            fontWeight: FontWeight.w900),
+        display4: GoogleFonts.merriweather(
+            fontSize: 72,
+            color: Color(0xff222233),
+            fontWeight: FontWeight.w900)),
+    accentTextTheme: Typography.whiteMountainView.copyWith(
+        button: GoogleFonts.rubik(
+            fontSize: 20,
+            color: Color(0xff334455),
+            fontWeight: FontWeight.w600)));
