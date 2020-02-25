@@ -51,7 +51,8 @@ class _CountdownState extends State<Countdown> {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
-      height: 15,
+      padding: EdgeInsets.all(3),
+      height: 18,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
