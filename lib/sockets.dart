@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:wikihuh/objects.dart';
-import 'package:wikihuh/pages/home.dart';
+import 'package:wikihuh/pages/gameplay_nav.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wikihuh/pages/intro.dart';
 import 'package:wikihuh/theme.dart';
+import 'package:wikihuh/widgets/dialogs.dart';
 
 class SocketLoader extends StatefulWidget {
   @override
@@ -13,12 +15,16 @@ class SocketLoader extends StatefulWidget {
 
 class _SocketLoaderState extends State<SocketLoader> {
   GameState _gameState;
+  GlobalKey<NavigatorState> _navigatorKey;
+
 
   @override
   void initState() {
     IO.Socket socket = IO.io('http://wikihuh.kirp.al', <String, dynamic>{
       'transports': ['websocket'],
     });
+
+    _navigatorKey = GlobalKey();
 
     _gameState = GameState(
       players: {},
@@ -44,7 +50,15 @@ class _SocketLoaderState extends State<SocketLoader> {
     socket.on('new-game', (data) => {
       setState(() {
         _gameState = _gameState.updateWith(data);
+        _navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => GamePlayNav(status: CurrentGame.of(context).status)));
       })
+    });
+
+    socket.on('join-game', (data) {
+      setState(() {
+        _gameState.updateWith(data);
+        _navigatorKey.currentState.pushReplacement(MaterialPageRoute(builder: (context) => GamePlayNav(status: CurrentGame.of(context).status,)));
+      });
     });
 
     socket.on('update', (data) {
@@ -53,7 +67,10 @@ class _SocketLoaderState extends State<SocketLoader> {
       });
     });
 
-    socket.on('err', (err) => print(err));
+    socket.on('err', (err) {
+      print('Error: ' + err);
+      showDialog(context: _navigatorKey.currentState.overlay.context, builder: (context) => ErrorDialog(context, err));
+    });
 
     super.initState();
   }
@@ -63,11 +80,12 @@ class _SocketLoaderState extends State<SocketLoader> {
     return CurrentGame(
       state: _gameState,
       child: MaterialApp(
+        navigatorKey: _navigatorKey,
         color: Color(0xff94B874),
         debugShowCheckedModeBanner: false,
         title: 'wikiHUH?',
         theme: wikiHuhTheme,
-        home: HomePage(),
+        home: IntroPage(),
       )
     );
   }

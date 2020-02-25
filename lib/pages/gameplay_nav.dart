@@ -4,7 +4,7 @@ import 'package:wikihuh/pages/finished.dart';
 import 'package:wikihuh/pages/make_caption.dart';
 import 'package:wikihuh/pages/new_game.dart';
 import 'package:wikihuh/pages/page_wrapper.dart';
-import 'package:wikihuh/pages/scoreboard.dart';
+import 'package:wikihuh/pages/results.dart';
 import 'package:wikihuh/pages/vote.dart';
 import 'package:wikihuh/sockets.dart';
 
@@ -35,12 +35,12 @@ class _GamePlayNavState extends State<GamePlayNav> with SingleTickerProviderStat
     super.dispose();
   }
 
-  Widget pageMap({GameStatus status, Animation<double> animation = const AlwaysStoppedAnimation(1)}) {
+  Widget pageMap({GameStatus status, AnimationController animation}) {
     switch (status) {
       case GameStatus.lobby: return NewGamePage(animation: animation);
       case GameStatus.writing: return MakeCaptionPage(animation: animation);
       case GameStatus.voting: return VotePage(animation: animation);
-      case GameStatus.scoreboard: return ScoreboardPage(animation: animation);
+      case GameStatus.scoreboard: return ResultsPage(animation: animation);
       case GameStatus.finished: return FinishedPage(animation: animation,);
     }
 
@@ -51,7 +51,9 @@ class _GamePlayNavState extends State<GamePlayNav> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     GameState _gameState = CurrentGame.of(context);
     if (_gameState.status == _status) {
-      return PageWrapper(child: pageMap(status: _status));
+      _controller.reset();
+      _controller.forward(from: _controller.upperBound);
+      return PageWrapper(child: pageMap(status: _status, animation: _controller));
     } else {
       setState(() {
         _status = _gameState.status;

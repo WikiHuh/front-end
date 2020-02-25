@@ -24,7 +24,7 @@ ThemeData wikiHuhTheme = ThemeData(
         display3: GoogleFonts.merriweather(
             fontSize: 60,
             color: Color(0xff222233),
-            fontWeight: FontWeight.w900),
+            fontWeight: FontWeight.w800),
         display4: GoogleFonts.merriweather(
             fontSize: 72,
             color: Color(0xff222233),

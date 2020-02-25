@@ -22,7 +22,7 @@ class _NewGamePageState extends State<NewGamePage> {
           child: Text('Game PIN', style: Theme.of(context).textTheme.display3, textAlign: TextAlign.center,),
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(30, 50, 30, 30),
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 40),
           alignment: Alignment.centerLeft,
           child: Center(
             child: (CurrentGame.of(context).pin?? '').length > 0 ? Row(

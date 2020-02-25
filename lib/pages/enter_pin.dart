@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:wikihuh/buttons/secondary_button.dart';
-import 'package:wikihuh/game_state.dart';
+import 'package:wikihuh/pages/page_wrapper.dart';
+import 'package:wikihuh/sockets.dart';
+import 'package:wikihuh/widgets/buttons.dart';
+import 'package:wikihuh/widgets/shadows.dart';
 
 class EnterPinPage extends StatefulWidget {
+  final String name;
+
+  EnterPinPage({@required this.name});
+
   @override
   _EnterPinPageState createState() => _EnterPinPageState();
 }
@@ -25,7 +31,7 @@ class _EnterPinPageState extends State<EnterPinPage> {
   }
 
   void onSubmit() {
-    CurrentGame.of(context).send('join game', {'pin': _pin.join(), 'name': CurrentGame.of(context).playerName});
+    CurrentGame.of(context).send('join-game', {'pin': _pin.join(), 'name': this.widget.name});
   }
 
   void onChanged(String v, int i) {
@@ -36,45 +42,43 @@ class _EnterPinPageState extends State<EnterPinPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30),
-            child: Form(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
-                    alignment: Alignment.centerLeft,
-                    child: Text('Enter Pin', style: Theme.of(context).textTheme.display4, textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 80),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SingleCharInput(onChanged: (String v) => onChanged(v, 0), thisField: focusNodes[0], nextField: focusNodes[1]),
-                        SingleCharInput(onChanged: (String v) => onChanged(v, 1), thisField: focusNodes[1], nextField: focusNodes[2]),
-                        SingleCharInput(onChanged: (String v) => onChanged(v, 2), thisField: focusNodes[2], nextField: focusNodes[3]),
-                        SingleCharInput(onChanged: (String v) => onChanged(v, 3), thisField: focusNodes[3], nextField: focusNodes[4]),
-                        SingleCharInput(onChanged: (String v) => onChanged(v, 4), thisField: focusNodes[4], nextField: focusNodes[5]),
-                        SingleCharInput(onChanged: (String v) {
-                          onChanged(v, 5);
-                          onSubmit();
-                        }, thisField: focusNodes[5], lastField: true,),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: SecondaryButton(text: 'Submit', onPressed: onSubmit)
-                  )
-                ],
+    return PageWrapper(
+      child: SingleChildScrollView(
+        child: Form(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
+                alignment: Alignment.centerLeft,
+                child: Text('Enter Pin', style: Theme.of(context).textTheme.display4, textAlign: TextAlign.center,),
               ),
-            ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 80),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SingleCharInput(onChanged: (String v) => onChanged(v, 0), thisField: focusNodes[0], nextField: focusNodes[1]),
+                    SingleCharInput(onChanged: (String v) => onChanged(v, 1), thisField: focusNodes[1], nextField: focusNodes[2]),
+                    SingleCharInput(onChanged: (String v) => onChanged(v, 2), thisField: focusNodes[2], nextField: focusNodes[3]),
+                    SingleCharInput(onChanged: (String v) => onChanged(v, 3), thisField: focusNodes[3], nextField: focusNodes[4]),
+                    SingleCharInput(onChanged: (String v) => onChanged(v, 4), thisField: focusNodes[4], nextField: focusNodes[5]),
+                    SingleCharInput(onChanged: (String v) {
+                      onChanged(v, 5);
+                      onSubmit();
+                    }, thisField: focusNodes[5], lastField: true,),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Button2(text: 'Submit', onPressed: onSubmit)
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 30),
+                child: Button3(text: 'Back', onPressed: () => Navigator.of(context).pop(),)
+              )
+            ],
           ),
         ),
       ),// This trailing comma makes auto-formatting nicer for build methods.
@@ -100,13 +104,23 @@ class _SingleCharInputState extends State<SingleCharInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 45,
+      width: 48,
+      height: 56,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          DropShadow(),
+          ShadowFrame(fgColor: Colors.white, height: 3),
+        ]
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: TextFormField(
-          keyboardType: TextInputType.number,
           focusNode: this.widget.thisField,
+          keyboardType: TextInputType.number,
           onChanged: (String newChar) {
+            print(newChar);
             setState(() {
               _currentChar = newChar;
             });
@@ -122,7 +136,7 @@ class _SingleCharInputState extends State<SingleCharInput> {
               FocusScope.of(context).requestFocus(this.widget.nextField);
             }
           },
-          style: Theme.of(context).textTheme.body1,
+          style: Theme.of(context).textTheme.body1.copyWith(fontSize: 25),
           maxLength: 1,
           textAlign: TextAlign.center,
           textAlignVertical: TextAlignVertical.center,

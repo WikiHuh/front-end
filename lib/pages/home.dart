@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wikihuh/pages/enter_pin.dart';
-import 'package:wikihuh/pages/gameplay_nav.dart';
 import 'package:wikihuh/pages/page_wrapper.dart';
 import 'package:wikihuh/sockets.dart';
 import 'package:wikihuh/widgets/buttons.dart';
+import 'package:wikihuh/widgets/dialogs.dart';
 import 'package:wikihuh/widgets/shadows.dart';
+import 'package:wikihuh/widgets/wikihuh_logo.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -42,13 +43,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('wiki', style: Theme.of(context).textTheme.display3,),
-                    Text('HUH?', style: Theme.of(context).textTheme.display3.copyWith(color: Colors.white),),
-                  ],
-                ),
+                WikihuhLogo(),
                 Container(
                   margin: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
                   decoration: BoxDecoration(
@@ -66,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       style: Theme.of(context).textTheme.body1,
                       decoration: InputDecoration(
-                        hintText: 'Your name',
+                        hintText: 'Nickname',
                         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                         border: InputBorder.none,
                         fillColor: Colors.white,
@@ -81,19 +76,22 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Button1(text: 'Create Game', onPressed: () {
-                    if (_name.length > 0) {
+                    if ((_name??'').isNotEmpty) {
                       _prefs?.setString('name', _name);
                       CurrentGame.of(context).send('create-game', {'name': _name});
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => GamePlayNav(status: CurrentGame.of(context).status)));
+                    } else {
+                      showDialog(context: context, builder: (context) => ErrorDialog(context, 'Please enter a name!'));
                     }
                   },),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 30, bottom: 30),
                   child: Button1(text: 'Join Game', onPressed: () {
-                    if (_name.length > 0) {
+                    if ((_name??'').isNotEmpty) {
                       _prefs?.setString('name', _name);
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => EnterPinPage(name: _name)));
+                    } else {
+                      showDialog(context: context, builder: (context) => ErrorDialog(context, 'Please enter a name!'));
                     }
                   },),
                 ),

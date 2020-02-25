@@ -6,6 +6,12 @@ import 'package:wikihuh/objects.dart';
 import 'package:wikihuh/sockets.dart';
 import 'package:wikihuh/widgets/shadows.dart';
 
+List<Player> sortPlayers(Map<String, Player> players) {
+  return players.values.toList()
+    ..sort((p1, p2) => p2.score - p1.score)
+    ..sublist(0, min(4, players.length));
+}
+
 class Leaderboard extends StatelessWidget {
   final Animation<double> animation;
 
@@ -13,9 +19,7 @@ class Leaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Player> _leaderboard = CurrentGame.of(context).players.values.toList()
-      ..sort((p1, p2) => p2.score - p1.score)
-      ..sublist(0, min(4, CurrentGame.of(context).players.length));
+    List<Player> _leaderboard = sortPlayers(CurrentGame.of(context).players);
 
     return ListView(
       children: [
