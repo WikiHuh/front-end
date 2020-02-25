@@ -113,16 +113,9 @@ class _ResultsPageState extends State<ResultsPage> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(30),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(200),
-                color: Color(0xfffcffaa),
-                boxShadow: [
-                  DropShadow(),
-                ]
-              ),
-              child: SvgPicture.asset('assets/trophy.svg', width: 50,),
+            Padding(
+              padding: EdgeInsets.all(15),
+              child: SvgPicture.asset('assets/trophy.svg', width: 60,),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(30, 20, 30, 20),

@@ -50,24 +50,21 @@ class _CountdownState extends State<Countdown> {
     TextStyle textStyle = Theme.of(context).textTheme.display2;
 
     return Container(
-      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 30),
+      height: 15,
       decoration: BoxDecoration(
         color: Colors.white,
-        shape: BoxShape.circle,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           DropShadow(),
         ]
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(width: textStyle.fontSize * 2.5, height: textStyle.fontSize * 2.5, child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(textStyle.color),
-            strokeWidth: 10,
-            value: this.t / this.startMs,)
-          ),
-          Text((t / 1000).ceil().toString(), style: textStyle,),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: LinearProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(textStyle.color),
+          backgroundColor: Colors.transparent,
+          value: this.t / this.startMs,),
       ),
     );
   }
