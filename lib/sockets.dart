@@ -50,14 +50,14 @@ class _SocketLoaderState extends State<SocketLoader> {
     socket.on('new-game', (data) => {
       setState(() {
         _gameState = _gameState.updateWith(data);
-        _navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => GamePlayNav(status: CurrentGame.of(context).status)));
+        _navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => GamePlayNav(status: _gameState.status)));
       })
     });
 
     socket.on('join-game', (data) {
       setState(() {
         _gameState.updateWith(data);
-        _navigatorKey.currentState.pushReplacement(MaterialPageRoute(builder: (context) => GamePlayNav(status: CurrentGame.of(context).status,)));
+        _navigatorKey.currentState.pushReplacement(MaterialPageRoute(builder: (context) => GamePlayNav(status: _gameState.status,)));
       });
     });
 

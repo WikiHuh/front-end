@@ -9,7 +9,6 @@ import 'package:wikihuh/pages/waiting.dart';
 import 'package:wikihuh/sockets.dart';
 import 'package:wikihuh/widgets/buttons.dart';
 import 'package:wikihuh/widgets/leaderboard.dart';
-import 'package:wikihuh/widgets/shadows.dart';
 import 'package:wikihuh/widgets/wiki_image.dart';
 
 enum CurrentPage {
