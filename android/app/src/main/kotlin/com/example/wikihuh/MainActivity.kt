@@ -1,4 +1,4 @@
-package com.example.wikihuh
+package com.kirpal.wikihuh
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
